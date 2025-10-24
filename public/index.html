@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>远程控制</title>
+    <style>
+        canvas { border: 1px solid #000; touch-action: none; }
+    </style>
+</head>
+<body>
+<h2>远程控制电脑</h2>
+<canvas id="screen" width="800" height="600"></canvas>
+
+<script>
+    const canvas = document.getElementById('screen');
+    const ctx = canvas.getContext('2d');
+
+    // wsUrl 从二维码扫码获取
+    const wsUrl = prompt('输入电脑 ws 地址，例如 ws://192.168.1.100:3000');
+    const ws = new WebSocket(wsUrl);
+
+    ws.onopen = () => {
+        console.log('Connected to computer');
+    };
+
+    ws.onmessage = (event) => {
+        const data = JSON.parse(event.data);
+        // 这里可以接收截图数据再渲染到 canvas
+        // 简化版 demo 不处理实际画面
+    };
+
+    // 捕捉点击事件
+    canvas.addEventListener('click', e => {
+        const rect = canvas.getBoundingClientRect();
+        ws.send(JSON.stringify({
+            action: 'click',
+            x: e.clientX,
+            y: e.clientY
+        }));
+    });
+
+    // 捕捉拖动事件
+    let dragging = false;
+    let startX, startY;
+
+    canvas.addEventListener('mousedown', e => {
+        dragging = true;
+        startX = e.clientX;
+        startY = e.clientY;
+    });
+
+    canvas.addEventListener('mouseup', e => {
+        if (!dragging) return;
+        dragging = false;
+        ws.send(JSON.stringify({
+            action: 'drag',
+            x: startX,
+            y: startY,
+            x2: e.clientX,
+            y2: e.clientY
+        }));
+    });
+</script>
+</body>
+</html>

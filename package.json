@@ -1,0 +1,77 @@
+{
+  "name": "threejs",
+  "version": "1.0.1",
+  "description": "descrip",
+  "author": "name",
+  "private": true,
+  "type": "commonjs",
+  "main": "electron/main.js",
+  "engines": {
+    "node": "^20.19.0 || >=22.12.0"
+  },
+  "scripts": {
+    "dev": "vite",
+    "dev:debug": "set DEBUG=vite:* && vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "start": "concurrently \"pnpm run dev\" \"wait-on http://localhost:5173 && .\\electron\\electron.exe electron\\main.js\"",
+    "electron:dev": ".\\electron\\electron.exe electron\\main.js",
+    "electron:build": "vite build && pnpm exec electron-builder --win"
+  },
+  "dependencies": {
+    "@babylonjs/core": "^8.30.5",
+    "@babylonjs/loaders": "^8.30.5",
+    "@jimp/js-bmp": "^1.6.0",
+    "@jimp/js-gif": "^1.6.0",
+    "@jimp/utils": "^1.6.0",
+    "@nut-tree/nut-js": "^4.2.0",
+    "@nut-tree/shared": "4.2.0",
+    "bmp-ts": "^1.0.9",
+    "bonjour": "^3.5.0",
+    "hls.js": "^1.6.13",
+    "jimp": "^1.6.0",
+    "qrcode": "^1.5.4",
+    "three": "^0.148.0",
+    "tinycolor2": "^1.6.0",
+    "vue": "^3.5.18",
+    "ws": "^8.18.3"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^6.0.1",
+    "concurrently": "^9.2.1",
+    "electron-builder": "^24.13.3",
+    "vite": "^7.0.6",
+    "vite-plugin-vue-devtools": "^8.0.0",
+    "wait-on": "^9.0.1"
+  },
+  "build": {
+    "appId": "com.example.threejs",
+    "productName": "数字孪生查看器",
+    "files": [
+      "dist/**/*",
+      "electron/**/*",
+      "node_modules/@nut-tree/**",
+      "node_modules/jimp/**",
+      "node_modules/@jimp/**"
+    ],
+    "asar": true,
+    "asarUnpack": [
+      "node_modules/@jimp/**"
+    ],
+    "directories": {
+      "buildResources": "public"
+    },
+    "publish": null,
+    "win": {
+      "icon": "public/icon.png",
+      "target": ["nsis"],
+      "sign": false
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "deleteAppDataOnUninstall": false
+    }
+  }
+}
